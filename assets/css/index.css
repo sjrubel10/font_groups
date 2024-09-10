@@ -1,0 +1,74 @@
+.file-upload-area {
+    border: 2px dashed #007bff;
+    border-radius: 5px;
+    min-width: 500px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.file-upload-area.dragover {
+    background-color: #e9ecef;
+}
+
+.file-upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers the content horizontally */
+    justify-content: center; /* Centers the content vertically if needed */
+    text-align: center; /* Ensures all text inside is centered */
+    padding: 20px; /* Adds padding around the content */
+    border: 2px dashed #007bff; /* Adds a dashed border */
+    border-radius: 5px; /* Rounded corners for the area */
+    min-width: 500px; /* Maximum width for the container */
+    margin: 0 auto; /* Centers the container horizontally */
+    background-color: #f8f9fa; /* Light background color */
+}
+
+.file-upload-area i {
+    font-size: 24px; /* Size of the icon */
+    margin-bottom: 10px; /* Space below the icon */
+    color: #007bff; /* Icon color */
+}
+
+.file-upload-area p {
+    margin: 0; /* Removes any margin for consistent spacing */
+    font-size: 16px; /* Sets a font size for the text */
+    color: #333; /* Text color */
+}
+.removeLoadedFont{
+    cursor: pointer;
+    color: red;
+}
+.removeLoadedFont:hover{
+    text-decoration: underline;
+}
+
+
+.fontDetailsHolder{
+    border: 1px solid #e1dfdf;
+    padding: 5px;
+    width: calc(100% - 12px);
+    display: flex;
+    border-radius: 5px;
+}
+.font-row {
+    display: flex; /* Use flexbox to arrange children horizontally */
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.font-row .form-group {
+    flex: 1;
+    margin: 5px;
+}
+.removeRows{
+    display: flex;
+    padding: 10px;
+    color: #990000;
+    cursor: pointer;
+}
+
