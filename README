@@ -1,0 +1,10 @@
+Create a database name font_group
+Than Run this sql command for creating groups table
+CREATE TABLE `font_group`.`groups` ( `id` INT NOT NULL AUTO_INCREMENT , `key` VARCHAR(12) NOT NULL , `name` VARCHAR(256) NOT NULL ,
+ `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `recorded` TINYINT(1)  NOT NULL DEFAULT '1' , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+Than Run this sql command for creating fonts table
+CREATE TABLE `font_group`.` fonts` ( `id` INT(10) NOT NULL AUTO_INCREMENT , `title` VARCHAR(256) NOT NULL , `groupkey` INT(12) NOT NULL ,
+`font_name` VARCHAR(256) NOT NULL , `size` INT(8) NOT NULL , `price` INT(8) NOT NULL , `created_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `recorded` INT(1) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+

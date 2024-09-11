@@ -9,7 +9,6 @@ $(document).ready(async function () {
     });
 
     fileUploadArea.on('dragleave', function () {
-        console.log('dragleave');
         $(this).removeClass('dragover');
     });
 
@@ -75,7 +74,6 @@ $(document).ready(async function () {
         } else {
             $('#uploadStatus').html('<div class="alert alert-danger">File upload failed, please try again. Error: ' + result.error + '</div>');
         }
-        // console.log(result.success);
 
     }
 
@@ -116,17 +114,18 @@ $(document).ready(async function () {
             $('#fontHolder').after( font_details );
         });
 
-        // console.log( 'Oj');
         if( loadedFonts.length > 0 ){
+
             $('#fontRows').empty();
             loadedFonts.forEach(function(fontName) {
                 options += `<option value="${fontName}">${fontName}</option>`;
             });
-            for( let i = 0; i < 4; i++ ) {
+            for( let i = 0; i < 2; i++ ) {
                 let getStyle = loadSelectFonts( options );
                 $('#fontRows').append( getStyle );
             }
-
+        }else{
+            alert( 'You Do Not Have Any Uploaded Font Files, Please Upload Font Files For Creating Groups');
         }
 
 
@@ -143,9 +142,6 @@ $(document).ready(async function () {
             });
 
             return fontFiles;
-            // console.log( fontFiles );
-
-            // Loop through the font files and dynamically create CSS and HTML
 
         } catch (error) {
             console.error('Failed to load font files.', error);
@@ -176,7 +172,6 @@ $(document).ready(async function () {
     /*$(document).on('click', 'select[name="font[]"]', function() {
         loadedFonts.forEach(function(fontName) {
             // $("#")<option value="font1">Font 1</option>
-            // console.log( fontName );
         });
     });*/
 
@@ -188,25 +183,24 @@ $(document).ready(async function () {
                      <div class="font-row">
                         <div class="fontDetailsHolder">
                             <div class="form-group">
-                                <input type="text" class="form-control" name="text[]" required placeholder="Font name">
+                                <input type="text" class="form-control" name="title[]" required placeholder="Font name">
                             </div>
                             <div class="form-group">
-                                <select class="form-control" name="font[]" required>
+                                <select class="form-control" name="font_name[]" required>
                                      ${options}
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="number" class="form-control" name="number1[]" min="0" required placeholder="1.0">
+                                <input type="number" class="form-control" name="size[]" min="0" required placeholder="1.0">
                             </div>
                             <div class="form-group">
-                                <input type="number" class="form-control" name="number2[]" min="0" required placeholder="0">
+                                <input type="number" class="form-control" name="price[]" min="0" required placeholder="0">
                             </div>
                             <div class="removeRows" >X</div>
                         </div>
                     </div>
                 `;
         return formGroupNewRow;
-        // console.log( formGroupNewRow );
 
     }
 
@@ -220,6 +214,8 @@ $(document).ready(async function () {
             });
             let getStyle = loadSelectFonts( options );
             $('.fontRows').append( getStyle );
+        }else{
+            alert( 'You Do Not Have Any Uploaded Font Files, Please Upload Font Files For Creating Groups');
         }
 
     });
@@ -234,39 +230,76 @@ $(document).ready(async function () {
             alert('At Least One Remain');
         }
     });
-    // Form submission with validation
+
+    function display_loaded_groups1( groups_data ){
+
+        console.log( groups_data );
+        var groups = '';
+        groups_data.forEach(function(groups) {
+            groups += `<tr >
+                            <td>asdas</td>
+                            <td>Roboto-Bold, Qatar2022Arabic-Bold</td>
+                            <td>2</td>
+                            <td><span>Edit</span> <span>Delete</span></td>
+                        </tr>`
+        });
+        console.log( groups );
+
+        $("#loadGroups").append( groups );
+    }
+
+    function display_loaded_groups(data) {
+        // Clear any existing rows
+        $('#loadGroups').empty();
+
+        // Loop through the data and create table rows
+        $.each(data, function(index, item) {
+            var row = '<tr>' +
+                '<td>' + item.name + '</td>' +
+                '<td>' + item.font_name + '</td>' +
+                '<td>' + item.counts + '</td>' +
+                '<td><span>Edit</span> <span>Delete</span></td>' +
+                '</tr>';
+
+            // Append the row to the table body
+            $('#loadGroups').append(row);
+        });
+    }
+
     $('#fontGroupForm').submit(function(event) {
         event.preventDefault();
-        // Get all selected fonts
-        const fonts = $('select[name="font[]"]').map(function() {
+        const fonts = $('select[name="font_name[]"]').map(function() {
             return $(this).val();
         }).get();
-        // Check if at least two fonts are selected
         const uniqueFonts = new Set(fonts);
         if (uniqueFonts.size < 2) {
             $('#validationMessage').html('<div class="alert alert-danger">You must select at least two different fonts.</div>');
             return;
         }
-        // Form is valid, proceed with submission (e.g., AJAX call)
-        $('#validationMessage').html('<div class="alert alert-success">Form is valid and ready to be submitted.</div>');
-
-        const data = $(this).serialize();
-        console.log( data );
-        // Example AJAX call (commented out):
+        $('#validationMessage').html('<div class="alert alert-success">Form is valid and submitted to strong.</div>');
 
         $.ajax({
             url: 'create_group.php',
             type: 'POST',
             data: $(this).serialize(),
             success: function(response) {
-                // Handle success
-                $('#validationMessage').html('<div class="alert alert-success">Group created successfully.</div>');
+                let result= JSON.parse(response);
+                // console.log( result.status );
+                if ( result.status === 'success') {
+                    $('#validationMessage').html('<div class="alert alert-success">Group created successfully.</div>');
+
+                    // console.log( result.data );
+                    display_loaded_groups( result.data );
+                }else{
+                    console.error('Error:', response.message);
+                }
             },
             error: function() {
                 // Handle error
                 $('#validationMessage').html('<div class="alert alert-danger">Failed to create group. Please try again.</div>');
             }
         });
+
 
     });
 

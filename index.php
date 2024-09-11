@@ -3,7 +3,10 @@ require_once "init.php";
 
 $fontFolder = __DIR__ . '/uploaded_font/';
 $font_files = get_uploaded_file_names( $fontFolder );
-//var_dump( $font_files );
+
+$created_groups =  make_font_group() ;
+//make_font_group();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,6 +24,7 @@ $font_files = get_uploaded_file_names( $fontFolder );
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+<h1 class="text-center">Create Font Group</h1>
 <div class="container p-2 mt-5 bg_info" >
     <div class="container mt-5">
         <div class="file-upload-area" id="fileUploadArea">
@@ -61,6 +65,34 @@ $font_files = get_uploaded_file_names( $fontFolder );
             </div>
         </form>
         <div id="validationMessage" class="mt-3"></div>
+    </div>
+
+
+    <div class="container mt-4">
+        <h2 class="mb-4">Group Data Display</h2>
+
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th>Font Names</th>
+                <th>Counts</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody id="loadGroups">
+            <?php if( count( $created_groups ) > 0 ){ ?>
+                <?php foreach ($created_groups as $group) : ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($group["name"]); ?></td>
+                        <td><?php echo htmlspecialchars($group["font_name"]); ?></td>
+                        <td><?php echo htmlspecialchars($group["counts"]); ?></td>
+                        <td><span>Edit</span> <span>Delete</span></td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php }?>
+            </tbody>
+        </table>
     </div>
 
 </div>

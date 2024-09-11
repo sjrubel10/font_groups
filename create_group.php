@@ -1,23 +1,21 @@
 <?php
-// your-server-endpoint.php
-
-// Include your database connection file here
-//include 'db_connection.php'; // Update this to your actual DB connection file
+require "init.php";
 
 $response = array(); // Initialize response array
-
+$created_groups = [];
 // Check if the request method is POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    var_dump( $_POST );
+
+//    var_dump( $_POST );
     // Get the form data
-    $texts = $_POST['text']; // Array of text inputs
-    $fonts = $_POST['font']; // Array of font selections
-    $number1 = $_POST['number1']; // Array of number1 inputs
-    $number2 = $_POST['number2']; // Array of number2 inputs
-    $colors = $_POST['color']; // Array of color inputs
+    $texts = $_POST['titleName']; // Array of text inputs
+    $titles = $_POST['title']; // Array of font selections
+    $font_names = $_POST['font_name']; // Array of font selections
+    $sizes = $_POST['size']; // Array of number1 inputs
+    $prices= $_POST['price']; // Array of number2 inputs
 
     // Validate input
-    if (count($texts) < 2 || count($fonts) < 2) {
+    if (count($titles) < 2 || count($font_names) < 2) {
         $response['status'] = 'error';
         $response['message'] = 'At least two fonts must be selected to create a group.';
         echo json_encode($response);
@@ -26,19 +24,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Prepare and execute database insertion
     try {
-        /*$stmt = $pdo->prepare("INSERT INTO font_groups (text, font, number1, number2, color) VALUES (?, ?, ?, ?, ?)");
-        for ($i = 0; $i < count($texts); $i++) {
-            $stmt->execute([
-                $texts[$i],
-                $fonts[$i],
-                $number1[$i],
-                $number2[$i],
-                $colors[$i]
-            ]);
-        }*/
+        $group_name = sanitize( $_POST['titleName'] );
+        $key = generateMd5Key( $group_name );
 
+        $group_id = insert_group_data( $key, $group_name );
+        if( $group_id ){
+            $result = insert_font_data( $group_id, $_POST );
+        }
+
+        $created_groups =  make_font_group() ;
         // If the insertion is successful, send a success response
         $response['status'] = 'success';
+        $response['data'] = $created_groups;
         $response['message'] = 'Group created successfully.';
     } catch (PDOException $e) {
         // Handle any errors during the database insertion
@@ -52,5 +49,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Return the response as JSON
-echo json_encode($response);
+echo json_encode( $response );
 ?>
