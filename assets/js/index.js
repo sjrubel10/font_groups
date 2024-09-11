@@ -249,19 +249,16 @@ $(document).ready(async function () {
     }
 
     function display_loaded_groups(data) {
-        // Clear any existing rows
         $('#loadGroups').empty();
 
-        // Loop through the data and create table rows
         $.each(data, function(index, item) {
-            var row = '<tr>' +
-                '<td>' + item.name + '</td>' +
-                '<td>' + item.font_name + '</td>' +
-                '<td>' + item.counts + '</td>' +
-                '<td><span>Edit</span> <span>Delete</span></td>' +
-                '</tr>';
+            var row = '<tr>\
+                <td>' + item.name + '</td>\
+                <td>' + item.font_name + '</td>\
+                <td>' + item.counts + '</td>\
+                <td><span>Edit</span> <span>Delete</span></td>\
+                </tr>';
 
-            // Append the row to the table body
             $('#loadGroups').append(row);
         });
     }

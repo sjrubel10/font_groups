@@ -87,7 +87,7 @@ $created_groups =  make_font_group() ;
                         <td><?php echo htmlspecialchars($group["name"]); ?></td>
                         <td><?php echo htmlspecialchars($group["font_name"]); ?></td>
                         <td><?php echo htmlspecialchars($group["counts"]); ?></td>
-                        <td><span>Edit</span> <span>Delete</span></td>
+                        <td><span class="">Edit</span> <span class="dragover">Delete</span></td>
                     </tr>
                 <?php endforeach; ?>
             <?php }?>

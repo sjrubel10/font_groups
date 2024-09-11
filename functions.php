@@ -195,11 +195,11 @@ function make_font_group(){
             }
         }
         $final_result[] = array(
-            'id' => $results['id'],
-            'name' => $results['name'],
-            'key' => $results['key'],
-            'font_name' => $font_name,
-            'counts' => $total_fonts,
+            'id'            => $results['id'],
+            'name'          => $results['name'],
+            'key'           => $results['key'],
+            'font_name'     => rtrim( $font_name, " ,") ,
+            'counts'        => $total_fonts,
         );
     }
 
