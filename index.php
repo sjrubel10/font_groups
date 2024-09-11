@@ -52,7 +52,7 @@ $font_files = get_uploaded_file_names( $fontFolder );
             <div class="form-group mr-2">
                 <input type="text" class="form-control " name="titleName" required placeholder="Group title">
             </div>
-            <div id="fontRows" >
+            <div id="fontRows" class="fontRows">
                 <!-- Initial Row -->
             </div>
             <div class="d-flex justify-content-between mt-3">

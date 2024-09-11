@@ -81,7 +81,10 @@ $(document).ready(async function () {
 
 
 
+    var options;
+    var loadedFonts;
     const display_uploaded_fonts = (fontFiles) => {
+        options = '';
         loadedFonts = [];
         fontFiles.forEach(file => {
             const fontName = file.split('.')[0]; // Extract the font name (without extension)
@@ -112,6 +115,19 @@ $(document).ready(async function () {
             // Append the new div to the font container
             $('#fontHolder').after( font_details );
         });
+
+        // console.log( 'Oj');
+        if( loadedFonts.length > 0 ){
+            $('#fontRows').empty();
+            loadedFonts.forEach(function(fontName) {
+                options += `<option value="${fontName}">${fontName}</option>`;
+            });
+            for( let i = 0; i < 4; i++ ) {
+                let getStyle = loadSelectFonts( options );
+                $('#fontRows').append( getStyle );
+            }
+
+        }
 
 
     }
@@ -166,12 +182,9 @@ $(document).ready(async function () {
 
     //Create Form Group
     var rowCount = 1;
-    let options;
-    loadedFonts.forEach(function(fontName) {
-        options += `<option value="${fontName}">${fontName}</option>`;
-    });
-
-    var formGroupNewRow = `
+    // let options;
+    function loadSelectFonts( options ){
+        let formGroupNewRow = `
                      <div class="font-row">
                         <div class="fontDetailsHolder">
                             <div class="form-group">
@@ -192,18 +205,26 @@ $(document).ready(async function () {
                         </div>
                     </div>
                 `;
-    // Function to add a new row
-    $('#addRowBtn').click(function() {
-        // console.log( loadedFonts );
+        return formGroupNewRow;
+        // console.log( formGroupNewRow );
+
+    }
+
+    $(document).on('click', '#addRowBtn', function () {
+
+        let options = '';
         rowCount++;
-        $('#fontRows').append( formGroupNewRow );
-        loadedFonts.forEach(function(fontName) {
-            options += `<option value="${fontName}">${fontName}</option>`;
-        });
+        if( loadedFonts.length > 0 ){
+            loadedFonts.forEach(function(fontName) {
+                options += `<option value="${fontName}">${fontName}</option>`;
+            });
+            let getStyle = loadSelectFonts( options );
+            $('.fontRows').append( getStyle );
+        }
 
     });
 
-    $('#fontRows').append( formGroupNewRow );
+    // $('#fontRows').append( formGroupNewRow );
     $(document).on('click', '.removeRows', function () {
         if( rowCount > 1 ){
             rowCount--;
