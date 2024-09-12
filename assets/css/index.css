@@ -72,3 +72,14 @@
     cursor: pointer;
 }
 
+.editFontGroup{
+    border: 1px solid #c5c0c0;
+    padding: 2px 7px;
+    color: #3c9311;
+}
+.deleteFontGroup{
+    border: 1px solid #c5c0c0;
+    padding: 2px 7px;
+    color: #990000;
+}
+

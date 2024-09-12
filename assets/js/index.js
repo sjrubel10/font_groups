@@ -231,33 +231,17 @@ $(document).ready(async function () {
         }
     });
 
-    function display_loaded_groups1( groups_data ){
-
-        console.log( groups_data );
-        var groups = '';
-        groups_data.forEach(function(groups) {
-            groups += `<tr >
-                            <td>asdas</td>
-                            <td>Roboto-Bold, Qatar2022Arabic-Bold</td>
-                            <td>2</td>
-                            <td><span>Edit</span> <span>Delete</span></td>
-                        </tr>`
-        });
-        console.log( groups );
-
-        $("#loadGroups").append( groups );
-    }
 
     function display_loaded_groups(data) {
         $('#loadGroups').empty();
 
         $.each(data, function(index, item) {
             var row = '<tr>\
-                <td>' + item.name + '</td>\
-                <td>' + item.font_name + '</td>\
-                <td>' + item.counts + '</td>\
-                <td><span>Edit</span> <span>Delete</span></td>\
-                </tr>';
+                            <td>' + item.name + '</td>\
+                            <td>' + item.font_name + '</td>\
+                            <td>' + item.counts + '</td>\
+                            <td><span class="editFontGroup" id="edit-'+item.key+'">Edit</span> <span class="deleteFontGroup" id="delete-'+item.key+'">Delete</span></td>\
+                        </tr>';
 
             $('#loadGroups').append(row);
         });

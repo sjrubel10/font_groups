@@ -4,7 +4,11 @@ require_once "init.php";
 $fontFolder = __DIR__ . '/uploaded_font/';
 $font_files = get_uploaded_file_names( $fontFolder );
 
-$created_groups =  make_font_group() ;
+$display_limit = 100;
+$created_groups =  make_font_group( $display_limit ) ;
+
+//$group_data = get_groups_data( 1, '85f29283b25e' );
+//var_test( $group_data );
 //make_font_group();
 
 ?>
@@ -87,9 +91,14 @@ $created_groups =  make_font_group() ;
                         <td><?php echo htmlspecialchars($group["name"]); ?></td>
                         <td><?php echo htmlspecialchars($group["font_name"]); ?></td>
                         <td><?php echo htmlspecialchars($group["counts"]); ?></td>
-                        <td><span class="">Edit</span> <span class="dragover">Delete</span></td>
+                        <td><span class="editFontGroup" id="edit-<?php echo htmlspecialchars( $group["counts"] )?>">Edit</span> <span class="deleteFontGroup" id="delete-<?php echo htmlspecialchars( $group["counts"] )?>">Delete</span></td>
                     </tr>
                 <?php endforeach; ?>
+            <?php } else {?>
+            <tbody id="loadGroups">
+                <tr>
+                    <td>No Created Form Groups Found!</td>
+                </tr>
             <?php }?>
             </tbody>
         </table>

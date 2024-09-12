@@ -32,7 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = insert_font_data( $group_id, $_POST );
         }
 
-        $created_groups =  make_font_group() ;
+        $display_limit = 100;
+        $created_groups =  make_font_group( $display_limit ) ;
         // If the insertion is successful, send a success response
         $response['status'] = 'success';
         $response['data'] = $created_groups;

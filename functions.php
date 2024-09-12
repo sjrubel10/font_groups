@@ -48,23 +48,18 @@ function insert_group_data( $key, $name ) {
 }
 
 function insert_font_data($group_id, $data) {
-    // Create an instance of the Database class
     $db = new Database();
 
-    // Check if the connection was successful
     if ($db->conn->connect_error) {
         die("Connection failed: " . $db->conn->connect_error);
     }
 
-    // Prepare SQL statement to prevent SQL injection
     $stmt = $db->conn->prepare("INSERT INTO ` fonts` (`group_id`, `title`, `font_name`, `size`, `price`) VALUES (?, ?, ?, ?, ?)");
 
-    // Check if the prepare was successful
     if ($stmt === false) {
         die("Error preparing the statement: " . $db->conn->error);
     }
 
-    // Bind parameters for each insert
     $result = 1; // Initialize result to success
     for ($i = 0; $i < count($data['title']); $i++) {
         $title = sanitize($data['title'][$i]);
@@ -93,36 +88,20 @@ function insert_font_data($group_id, $data) {
 }
 
 
-function get_groups_data1( $display_limit ){
-    $db = new Database();
-    $groups=$font_details=array();
-    $id = $key = $name = null;
-    $query="SELECT `id`, `key`, `name`, `created_date`, `recorded` FROM `groups` WHERE `recorded` = 1 ORDER BY `id` DESC LIMIT $display_limit";
-    echo $query;
-    $st = $db->conn->prepare($query);
-    $st->execute();
-    $st->bind_result( $id ,$key, $name );
-    $st->store_result();
-    while($st->fetch()){
-        $ids[]=$id;
-        $font_details[ $id ]= array(
-            'key'=>$key,
-            'name'=>$name
-        );
-    }
-    $st->close();
-    $font_details=get_multiple_fonts_data( $ids );
 
-//    var_dump( $font_details );
-
-    return $font_details;
-}
-
-function get_groups_data($display_limit) {
+function get_groups_data( $display_limit, $ket= null ) {
     $db = new Database();
     $font_details = array();
     $id = $key = $name = $created_date = $recorded = null;
-    $query = "SELECT `id`, `key`, `name`, `created_date`, `recorded` FROM `groups` WHERE `recorded` = 1 ORDER BY `id` DESC LIMIT ?";
+    if( $key === null ){
+
+        $query = "SELECT `id`, `key`, `name`, `created_date`, `recorded` FROM `groups` WHERE `recorded` = 1  ORDER BY `id` DESC LIMIT ?";
+
+    }else{
+
+        $query = "SELECT `id`, `key`, `name`, `created_date`, `recorded` FROM `groups` WHERE `key` = $key && `recorded` = 1 ORDER BY `id` DESC LIMIT ?";
+
+    }
     $st = $db->conn->prepare($query);
     if ($st === false) {
         die("Error preparing the statement: " . $db->conn->error);
@@ -153,33 +132,38 @@ function get_groups_data($display_limit) {
 }
 
 function get_multiple_fonts_data( $ids, $font_details ){
-    $id = $group_id = $title = $font_name = $size = $price = $created_time = $recorded = null;
-    $ids_str=implode(",", $ids );
-    $db = new Database();
-    $query = " SELECT `id`, `group_id`, `title`, `font_name`, `size`, `price`, `created_time`, `recorded` FROM ` fonts` WHERE `recorded`=1 AND `group_id` IN( $ids_str ) ";
-    $st = $db->conn->prepare( $query );
-    $st->execute();
-    $st->bind_result( $id,$group_id, $title, $font_name, $size, $price, $created_time, $recorded );
-    $st->store_result();
-    while($st->fetch()){
 
-        $font_details[$group_id]['font_details'][]= array(
-            'id'=>$id,
-            'title'=>$title,
-            'font_name'=>$font_name,
-            'size'=>$size,
-            'price'=>$price,
-            'created_time'=>$created_time,
-        );
 
+    if( count( $ids ) > 0 ) {
+        $id = $group_id = $title = $font_name = $size = $price = $created_time = $recorded = null;
+        $ids_str = implode(",", $ids);
+        $db = new Database();
+        $query = " SELECT `id`, `group_id`, `title`, `font_name`, `size`, `price`, `created_time`, `recorded` FROM ` fonts` WHERE `group_id` IN( $ids_str ) ";
+//        echo $query;
+        $st = $db->conn->prepare($query);
+        $st->execute();
+        $st->bind_result($id, $group_id, $title, $font_name, $size, $price, $created_time, $recorded);
+        $st->store_result();
+        while ($st->fetch()) {
+
+            $font_details[$group_id]['font_details'][] = array(
+                'id' => $id,
+                'title' => $title,
+                'font_name' => $font_name,
+                'size' => $size,
+                'price' => $price,
+                'created_time' => $created_time,
+            );
+
+        }
+        $st->close();
     }
-    $st->close();
 
     return array_values( $font_details );
 }
 
-function make_font_group(){
-    $display_limit = 100;
+function make_font_group( $display_limit ){
+
     $result_data = get_groups_data( $display_limit );
 
     $final_result = array();
@@ -207,6 +191,17 @@ function make_font_group(){
 }
 
 function sanitize( $data ) {
-    return  $data;
-//    return htmlspecialchars(strip_tags($this->conn->real_escape_string($data)));
+    $db = new Database();
+    return htmlspecialchars(strip_tags($db->conn->real_escape_string($data)));
+}
+
+function sanitize_1($data){
+    $db = new Database();
+    return htmlentities(strip_tags(mysqli_real_escape_string($db, $data)));
+}
+
+function var_test( $data ){
+    echo "<pre>";
+    var_dump( $data );
+    die();
 }
