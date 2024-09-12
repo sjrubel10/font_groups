@@ -11,7 +11,7 @@ $created_groups =  make_font_group( $display_limit ) ;
 //var_test( $group_data );
 //make_font_group();
 
-//var_test( $font_files );
+//var_test( $created_groups );
 
 ?>
 <!DOCTYPE html>

@@ -71,6 +71,12 @@
     color: #990000;
     cursor: pointer;
 }
+.removeEditRows{
+    display: flex;
+    padding: 10px;
+    color: #990000;
+    cursor: pointer;
+}
 
 .editFontGroup{
     border: 1px solid #c5c0c0;

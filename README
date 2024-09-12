@@ -1,5 +1,8 @@
+
 Create a database name: font_group
+
 Than Run this sql command for creating groups table
+
 CREATE TABLE `font_group`.`groups` (
     `id` INT NOT NULL AUTO_INCREMENT ,
     `key` VARCHAR(12) NOT NULL ,
@@ -10,7 +13,7 @@ CREATE TABLE `font_group`.`groups` (
 ) ENGINE = InnoDB;
 
 Than Run this sql command for creating fonts table
-CREATE TABLE `font_group`.` fonts`(
+CREATE TABLE `font_group`.`fonts`(
 	`id` INT(10) NOT NULL AUTO_INCREMENT ,
 	`group_id` INT(10) NOT NULL,
 	`title` VARCHAR(256) NOT NULL ,

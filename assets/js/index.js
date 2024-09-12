@@ -74,9 +74,7 @@ $(document).ready(async function () {
         } else {
             $('#uploadStatus').html('<div class="alert alert-danger">File upload failed, please try again. Error: ' + result.error + '</div>');
         }
-
     }
-
 
 
     var options;
@@ -159,7 +157,7 @@ $(document).ready(async function () {
 
         try {
             const response = await $.ajax({
-                url: 'remove_file.php', // PHP script to handle deletion
+                url: 'API/remove_file.php', // PHP script to handle deletion
                 type: 'POST',
                 data: {filename: fileName},
             });
@@ -228,12 +226,12 @@ $(document).ready(async function () {
             $(this).parent().hide();
             $(this).parent().remove();
         }else{
-            alert('At Least One Remain');
+            alert('At Least Tow Fonts Required');
         }
     });
 
 
-    function display_loaded_groups(data) {
+    function display_loaded_groups( data ) {
         $('#loadGroups').empty();
 
         $.each(data, function(index, item) {
@@ -246,6 +244,17 @@ $(document).ready(async function () {
 
             $('#loadGroups').append(row);
         });
+    }
+    function display_single_font_group( data ) {
+        // console.log( data );
+        var singleFontRow = '<tr id="' + data.key + '">\
+                        <td>' + data.name + '</td>\
+                        <td>' + data.font_name + '</td>\
+                        <td>' + data.counts + '</td>\
+                        <td><span class="editFontGroup" id="edit-'+data.key+'">Edit</span> <span class="deleteFontGroup" id="delete-'+data.key+'">Delete</span></td>\
+                    </tr>';
+
+        $('#loadGroups').append( singleFontRow );
     }
 
     $('#fontGroupForm').submit(function(event) {
@@ -261,7 +270,7 @@ $(document).ready(async function () {
         $('#validationMessage').html('<div class="alert alert-success">Form is validated and submitting to store.</div>');
 
         $.ajax({
-            url: 'create_group.php',
+            url: 'API/create_group.php',
             type: 'POST',
             data: $(this).serialize(),
             success: function(response) {
@@ -285,14 +294,11 @@ $(document).ready(async function () {
 
     });
 
-
     function removeElement( string ) {
 
         return string.split('-')[1];
 
     }
-
-
 
     const editPopup = ( key ) =>{
 
@@ -302,59 +308,58 @@ $(document).ready(async function () {
             data: {key : key,},
             success: function(response) {
                 let result= JSON.parse(response);
-                // console.log( result );
-
                 if( result.status ){
 
                     let group_data = result.data.group_data;
                     let font_group_details = group_data[0]['font_details'];
                     let fontFiles = result.data.font_files;
-
-
-
-                    let fontOptions;
-                    fontFiles.forEach(function(fontName) {
-                        fontOptions += `<option value="${fontName}">${fontName}</option>`;
-                    });
-
                     let details = '';
-                    font_group_details.forEach( function( group_detail ){
 
-                        details += `<div class="fontDetailsHolder">
+                    font_group_details.forEach( function( group_detail ){
+                        let fontOptions = '' ;
+                        fontFiles.forEach(function( fontName ) {
+                            if( group_detail['font_name'] === fontName ){
+                                var isSelected = 'selected';
+                            }else{
+                                isSelected = '';
+                            }
+                            fontOptions += `<option value="${fontName}" ${isSelected}>${fontName}</option>`;
+                        });
+
+                        details += `<div class="fontDetailsHolder" id="removeFromEdit-${group_detail['id']}">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" name="title[]" required placeholder="Font name" value="${group_detail.title}">
+                                            <input type="text" class="form-control" name="${group_detail['id']}[title]" required placeholder="Font name" value="${group_detail.title}">
                                         </div>
                                         <div class="form-group">
-                                            <select class="form-control" name="font_name[]" required>
+                                            <select class="form-control" name="${group_detail['id']}[font_name]" required>
                                                 <!--<option value=fontName">fontName</option>-->
                                                 ${fontOptions}
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <input type="number" class="form-control" name="size[]" min="0" required placeholder="1.0" value="${group_detail.size}">
+                                            <input type="number" class="form-control" name="${group_detail['id']}[size]" min="0" required placeholder="1.0" value="${group_detail.size}">
                                         </div>
                                         <div class="form-group">
-                                            <input type="number" class="form-control" name="price[]" min="0" required placeholder="0" value="${group_detail.price}">
+                                            <input type="number" class="form-control" name="${group_detail['id']}[price]" min="0" required placeholder="0" value="${group_detail.price}">
                                         </div>
-                                        <div class="removeRows" >X</div>
+                                        <div class="removeEditRows" >X</div>
                                     </div>`;
                     });
 
                     let editPopupDisplay = ` <div id="overlay" class="position-fixed w-100 h-100 bg-dark" style="display: block; top: 0; left: 0; opacity: 0.5; z-index: 1040;"></div>
-                                <div id="edit-popup" class="position-fixed p-3 shadow rounded bg-light text-center" style="display: block; width: 650px; z-index: 1050;">
+                            <div id="edit-popup" class="position-fixed p-3 shadow rounded bg-light text-center" style="display: block; width: 650px; z-index: 1050;">
                                 <button type="button" id="close-popup" class="close text-dark" aria-label="Close" style="padding-left: 5px;">
                                     <i class="fas fa-times"></i>
                                 </button>
                                 <h2 id="popup-message" class="mb-3">Edit Font Group</h2>
-                               
                                 <form id="editFontGroupform" >
                                     <div class="form-group mr-2">
-                                        <input type="text" class="form-control " name="titleName" required placeholder="Group title" value="${group_data[0]['name']}">
+                                        <input type="text" class="form-control " name="titleName[${group_data[0]['key']}]" required placeholder="Group title" value="${group_data[0]['name']}">
                                     </div>
-                                    <div class="font-row">
+                                    <div class="font-row" id="editFontRow">
                                         ${details}
                                     </div>
-                                    <button class="confirm-yes btn btn-success btn-sm" id="confirm">Submit</button>
+                                    <input class=" btn btn-success btn-sm" type="submit" id="submitEditForm-${group_data[0]['key']}" value="Submit">
                                 </form>
                             </div>`;
 
@@ -368,8 +373,45 @@ $(document).ready(async function () {
             }
         });
 
-
     }
+
+
+    $(document).on( 'submit', '#editFontGroupform', function( event ){
+        let submitButtonId = $('#editFontGroupform input[type="submit"]').attr('id');
+        let groupKey = removeElement( submitButtonId );
+
+        event.preventDefault();
+        $.ajax({
+            url: 'API/edit_group.php',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                let result= JSON.parse(response);
+                // console.log( result.data );
+                if( result.status ){
+                    $("#"+groupKey).remove();
+                    display_single_font_group( result.data );
+                    hidePopup();
+                    alert( result.message );
+                }
+
+            },
+            error: function() {
+                // Handle error
+                $('#validationMessage').html('<div class="alert alert-danger">Failed to create group. Please try again.</div>');
+            }
+        });
+    });
+
+    $(document).on( 'click', '.removeEditRows', function(){
+        let childCount = $('#editFontRow').children('.fontDetailsHolder').length;
+        if( childCount > 2 ){
+            $(this).parent().remove();
+        }else{
+            alert( 'You need At Least Two Fonts ' );
+        }
+
+    });
 
     $(document).on( 'click', '.editFontGroup', function(){
         let clickedId = $(this).attr('id');
@@ -454,5 +496,7 @@ $(document).ready(async function () {
         make_popup( 'Are you sure you want to delete this item?', key );
 
     });
+
+
 
 });

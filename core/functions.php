@@ -50,7 +50,7 @@ function insert_font_data($group_id, $data) {
         die("Connection failed: " . $db->conn->connect_error);
     }
 
-    $stmt = $db->conn->prepare("INSERT INTO ` fonts` (`group_id`, `title`, `font_name`, `size`, `price`) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $db->conn->prepare("INSERT INTO `fonts` (`group_id`, `title`, `font_name`, `size`, `price`) VALUES (?, ?, ?, ?, ?)");
 
     if ($stmt === false) {
         die("Error preparing the statement: " . $db->conn->error);
@@ -135,7 +135,7 @@ function get_multiple_fonts_data( $ids, $font_details ){
         $id = $group_id = $title = $font_name = $size = $price = $created_time = $recorded = null;
         $ids_str = implode(",", $ids);
         $db = new Database();
-        $query = " SELECT `id`, `group_id`, `title`, `font_name`, `size`, `price`, `created_time`, `recorded` FROM ` fonts` WHERE `group_id` IN( $ids_str ) ";
+        $query = " SELECT `id`, `group_id`, `title`, `font_name`, `size`, `price`, `created_time`, `recorded` FROM `fonts` WHERE `recorded` = 1 && `group_id` IN( $ids_str ) ";
 //        echo $query;
         $st = $db->conn->prepare($query);
         $st->execute();
@@ -198,20 +198,15 @@ function make_font_group( $display_limit ){
 function updateGroupRecorded( $key, $recorded ) {
 
     $db =new database();
-    // Prepare the SQL statement
     $sql = "UPDATE `groups` SET `recorded` = ? WHERE `key` = ?";
 
-    // Prepare a prepared statement
     if ($stmt = $db->conn->prepare($sql)) {
-        // Bind parameters to the statement
         $stmt->bind_param("is", $recorded, $key ); // "is" means integer for recorded and string for key
 
-        // Execute the prepared statement
         if ($stmt->execute()) {
             $stmt->close();
             return true; // Update was successful
         } else {
-            // Handle execution error
             error_log("Execute failed: " . $stmt->error);
         }
 
@@ -222,6 +217,62 @@ function updateGroupRecorded( $key, $recorded ) {
     }
 
     return false; // Update failed
+}
+
+function updateGroupName( $key, $name ) {
+
+    $db =new database();
+    $sql = "UPDATE `groups` SET `name` = ? WHERE `key` = ?";
+
+    if ($stmt = $db->conn->prepare( $sql )) {
+        $stmt->bind_param("ss", $name, $key ); // "is" means integer for recorded and string for key
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            return true; // Update was successful
+        } else {
+            error_log("Execute failed: " . $stmt->error);
+        }
+
+        $stmt->close();
+    } else {
+        error_log("Prepare failed: " . $db->conn->error);
+    }
+
+    return false; // Update failed
+}
+
+function updateFont( $id, $title, $font_name, $size, $price ) {
+
+    $title = sanitize( $title );
+    $font_name = sanitize( $font_name );
+    $size = sanitize( $size );
+    $price = sanitize( $price );
+    $id = sanitize( $id );
+
+    $db = new database();
+    if ( $db->conn->connect_error ) {
+        return false;
+    }
+
+    $stmt = $db->conn->prepare("UPDATE `fonts` SET `title` = ?, `font_name` = ?, `size` = ?, `price` = ? WHERE `id` = ?");
+
+    if ($stmt === false) {
+        return false;
+    }
+
+    $stmt->bind_param("ssiii", $title, $font_name, $size, $price, $id);
+
+    if ($stmt->execute()) {
+        $result = true;
+    } else {
+        $result = false;
+    }
+
+    $stmt->close();
+    $db->conn->close();
+
+    return $result;
 }
 
 function sanitize( $data ) {

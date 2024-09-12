@@ -1,7 +1,7 @@
 <?php
-if (isset($_POST['filename'])) {
+if ( isset($_POST['filename'] ) ) {
     $fileName = $_POST['filename'];
-    $filePath = 'uploaded_font/' . $fileName; // Define the file path
+    $filePath = '../uploaded_font/' . $fileName; // Define the file path
 
     // Check if the file exists and delete it
     if (file_exists($filePath)) {
