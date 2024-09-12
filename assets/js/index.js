@@ -149,6 +149,7 @@ $(document).ready(async function () {
     };
 
     const data = await fetchFonts('getFonts.php');
+    // const data = await fetchFonts('API/get_font_file_name.php');
     display_uploaded_fonts( data );
 
     $(document).on('click', '.removeLoadedFont', async function () {
@@ -236,7 +237,7 @@ $(document).ready(async function () {
         $('#loadGroups').empty();
 
         $.each(data, function(index, item) {
-            var row = '<tr>\
+            var row = '<tr id="' + item.key + '">\
                             <td>' + item.name + '</td>\
                             <td>' + item.font_name + '</td>\
                             <td>' + item.counts + '</td>\
@@ -257,7 +258,7 @@ $(document).ready(async function () {
             $('#validationMessage').html('<div class="alert alert-danger">You must select at least two different fonts.</div>');
             return;
         }
-        $('#validationMessage').html('<div class="alert alert-success">Form is valid and submitted to strong.</div>');
+        $('#validationMessage').html('<div class="alert alert-success">Form is validated and submitting to store.</div>');
 
         $.ajax({
             url: 'create_group.php',
@@ -281,6 +282,106 @@ $(document).ready(async function () {
             }
         });
 
+
+    });
+
+    const stringSlice = ( string, sliceBy ) => {
+
+    }
+
+    function removeElement(elementId) {
+
+        return elementId.split('-')[1];
+
+    }
+
+    $(document).on( 'click', '.editFontGroup', function(){
+        let clickedId = $(this).attr('id');
+        let $key = clickedId.slice();
+        alert( clickedId );
+    });
+
+
+
+    function showPopup(message) {
+        // Set the message text
+        $('#popup-message').text(message);
+
+        // Show the popup and the overlay
+        $('#delete-popup, #overlay').fadeIn();
+        $('#overlay').addClass('active');
+    }
+
+    // Function to hide the popup
+    function hidePopup() {
+
+        $('#delete-popup, #overlay').empty();
+        $('#delete-popup, #overlay').remove();
+
+    }
+
+
+    $(document).on( 'click', '#close-popup, #confirm-no', function(){
+        hidePopup();
+    });
+
+    const remove_items = ( key )=> {
+
+        // console.log( key );
+        $.ajax({
+            url: 'API/delete_group.php',
+            type: 'POST',
+            data: {key : key,},
+            success: function(response) {
+                let result= JSON.parse(response);
+                if ( result.status ) {
+                    hidePopup();
+                    $( "#"+key ).remove();
+                }else{
+                    console.error('Error:', response.message);
+                }
+            },
+            error: function() {
+                alert( 'Failed To Delete' );
+            }
+        });
+    }
+
+    $(document).on( 'click', '.confirm-yes', function(){
+
+        remove_btn_from_popup( "Font Group is Deleting..." );
+        let clickedId = $(this).attr('id');
+        let key = removeElement(clickedId).trim();
+        remove_items( key );
+
+    });
+
+    const remove_btn_from_popup = ( message ) =>{
+        $("#buttonHolder").hide();
+        $("#popup-message").empty();
+        $("#popup-message").text( message );
+    }
+    function make_popup( message, key ){
+        let confirmationPopup = ` <div id="overlay" class="position-fixed w-100 h-100 bg-dark" style="display: block; top: 0; left: 0; opacity: 0.5; z-index: 1040;"></div>
+                                    <div id="delete-popup" class="position-fixed p-3 shadow rounded bg-light text-center" style="display: block; width: 350px; z-index: 1050;">
+                                        <button type="button" id="close-popup" class="close text-dark" aria-label="Close" style="padding-left: 5px;">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        <p id="popup-message" class="mb-3">${message}</p>
+                                        <div id="buttonHolder">
+                                            <button class="confirm-yes btn btn-success btn-sm" id="confirm-${key}">Yes</button>
+                                            <button id="confirm-no" class="btn btn-secondary btn-sm">No</button>
+                                        </div>
+                                    </div>`;
+
+        $('body').append( confirmationPopup );
+    }
+
+    $(document).on( 'click', '.deleteFontGroup', function(){
+
+        let clickedId = $(this).attr('id');
+        let key = removeElement(clickedId).trim();
+        make_popup( 'Are you sure you want to delete this item?', key );
 
     });
 

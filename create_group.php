@@ -4,7 +4,7 @@ require "init.php";
 $response = array(); // Initialize response array
 $created_groups = [];
 // Check if the request method is POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
 
 //    var_dump( $_POST );
     // Get the form data

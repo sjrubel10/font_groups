@@ -190,6 +190,43 @@ function make_font_group( $display_limit ){
     return $final_result;
 }
 
+/**
+ * Update a row in the database table.
+ *
+ * @param string $key The key value for the WHERE clause.
+ * @param int $recorded The new value for the 'recorded' column.
+ * @param mysqli $conn The MySQLi connection object.
+ * @return bool True if the update was successful, false otherwise.
+ */
+function updateGroupRecorded( $key, $recorded ) {
+
+    $db =new database();
+    // Prepare the SQL statement
+    $sql = "UPDATE `groups` SET `recorded` = ? WHERE `key` = ?";
+
+    // Prepare a prepared statement
+    if ($stmt = $db->conn->prepare($sql)) {
+        // Bind parameters to the statement
+        $stmt->bind_param("is", $recorded, $key ); // "is" means integer for recorded and string for key
+
+        // Execute the prepared statement
+        if ($stmt->execute()) {
+            $stmt->close();
+            return true; // Update was successful
+        } else {
+            // Handle execution error
+            error_log("Execute failed: " . $stmt->error);
+        }
+
+        $stmt->close();
+    } else {
+        // Handle prepare error
+        error_log("Prepare failed: " . $db->conn->error);
+    }
+
+    return false; // Update failed
+}
+
 function sanitize( $data ) {
     $db = new Database();
     return htmlspecialchars(strip_tags($db->conn->real_escape_string($data)));

@@ -87,15 +87,14 @@ $created_groups =  make_font_group( $display_limit ) ;
             <tbody id="loadGroups">
             <?php if( count( $created_groups ) > 0 ){ ?>
                 <?php foreach ($created_groups as $group) : ?>
-                    <tr>
+                    <tr id="<?php echo htmlspecialchars( $group["key"] )?>">
                         <td><?php echo htmlspecialchars($group["name"]); ?></td>
                         <td><?php echo htmlspecialchars($group["font_name"]); ?></td>
                         <td><?php echo htmlspecialchars($group["counts"]); ?></td>
-                        <td><span class="editFontGroup" id="edit-<?php echo htmlspecialchars( $group["counts"] )?>">Edit</span> <span class="deleteFontGroup" id="delete-<?php echo htmlspecialchars( $group["counts"] )?>">Delete</span></td>
+                        <td><span class="editFontGroup" id="edit-<?php echo htmlspecialchars( $group["key"] )?>">Edit</span> <span class="deleteFontGroup" id="delete-<?php echo htmlspecialchars( $group["key"] )?>">Delete</span></td>
                     </tr>
                 <?php endforeach; ?>
             <?php } else {?>
-            <tbody id="loadGroups">
                 <tr>
                     <td>No Created Form Groups Found!</td>
                 </tr>
@@ -103,6 +102,9 @@ $created_groups =  make_font_group( $display_limit ) ;
             </tbody>
         </table>
     </div>
+
+
+
 
 </div>
 
