@@ -90,6 +90,11 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+#edit-popup {
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
 #overlay.active {
     backdrop-filter: blur(5px); /* Applies a blur effect to the overlay */

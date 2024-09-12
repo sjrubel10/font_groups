@@ -3,14 +3,10 @@
 function get_uploaded_file_names( $fontFolder ){
     $fontFiles = [];
 
-// Check if the folder exists
     if ( is_dir( $fontFolder ) ) {
-        // Get all files in the 'fonts' folder
         $files = scandir( $fontFolder );
 
-        // Loop through each file in the folder
         foreach ($files as $file) {
-            // Skip the current and parent directory entries
             if ($file !== '.' && $file !== '..' && pathinfo( $file, PATHINFO_EXTENSION) === 'ttf' ) {
                 $fontFiles[] = $file;
             }
@@ -89,25 +85,26 @@ function insert_font_data($group_id, $data) {
 
 
 
-function get_groups_data( $display_limit, $ket= null ) {
+function get_groups_data( $display_limit, $group_key= null ) {
     $db = new Database();
     $font_details = array();
     $id = $key = $name = $created_date = $recorded = null;
-    if( $key === null ){
-
+    if( $group_key === null ){
         $query = "SELECT `id`, `key`, `name`, `created_date`, `recorded` FROM `groups` WHERE `recorded` = 1  ORDER BY `id` DESC LIMIT ?";
-
     }else{
-
-        $query = "SELECT `id`, `key`, `name`, `created_date`, `recorded` FROM `groups` WHERE `key` = $key && `recorded` = 1 ORDER BY `id` DESC LIMIT ?";
-
+        $query = "SELECT `id`, `key`, `name`, `created_date`, `recorded` FROM `groups` WHERE `key` = ? && `recorded` = 1 ORDER BY `id` DESC LIMIT ?";
     }
     $st = $db->conn->prepare($query);
     if ($st === false) {
         die("Error preparing the statement: " . $db->conn->error);
     }
 
-    $st->bind_param("i", $display_limit); // "i" for integer
+    if( $group_key === null ){
+        $st->bind_param("i", $display_limit );
+    }else{
+        $st->bind_param("si", $group_key, $display_limit );
+    }
+     // "i" for integer
 
     if (!$st->execute()) {
         die("Execution failed: " . $st->error);

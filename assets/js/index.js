@@ -285,41 +285,112 @@ $(document).ready(async function () {
 
     });
 
-    const stringSlice = ( string, sliceBy ) => {
+
+    function removeElement( string ) {
+
+        return string.split('-')[1];
 
     }
 
-    function removeElement(elementId) {
 
-        return elementId.split('-')[1];
+
+    const editPopup = ( key ) =>{
+
+        $.ajax({
+            url: 'API/get_font_group_data.php',
+            type: 'POST',
+            data: {key : key,},
+            success: function(response) {
+                let result= JSON.parse(response);
+                // console.log( result );
+
+                if( result.status ){
+
+                    let group_data = result.data.group_data;
+                    let font_group_details = group_data[0]['font_details'];
+                    let fontFiles = result.data.font_files;
+
+
+
+                    let fontOptions;
+                    fontFiles.forEach(function(fontName) {
+                        fontOptions += `<option value="${fontName}">${fontName}</option>`;
+                    });
+
+                    let details = '';
+                    font_group_details.forEach( function( group_detail ){
+
+                        details += `<div class="fontDetailsHolder">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="title[]" required placeholder="Font name" value="${group_detail.title}">
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control" name="font_name[]" required>
+                                                <!--<option value=fontName">fontName</option>-->
+                                                ${fontOptions}
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="number" class="form-control" name="size[]" min="0" required placeholder="1.0" value="${group_detail.size}">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="number" class="form-control" name="price[]" min="0" required placeholder="0" value="${group_detail.price}">
+                                        </div>
+                                        <div class="removeRows" >X</div>
+                                    </div>`;
+                    });
+
+                    let editPopupDisplay = ` <div id="overlay" class="position-fixed w-100 h-100 bg-dark" style="display: block; top: 0; left: 0; opacity: 0.5; z-index: 1040;"></div>
+                                <div id="edit-popup" class="position-fixed p-3 shadow rounded bg-light text-center" style="display: block; width: 650px; z-index: 1050;">
+                                <button type="button" id="close-popup" class="close text-dark" aria-label="Close" style="padding-left: 5px;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <h2 id="popup-message" class="mb-3">Edit Font Group</h2>
+                               
+                                <form id="editFontGroupform" >
+                                    <div class="form-group mr-2">
+                                        <input type="text" class="form-control " name="titleName" required placeholder="Group title" value="${group_data[0]['name']}">
+                                    </div>
+                                    <div class="font-row">
+                                        ${details}
+                                    </div>
+                                    <button class="confirm-yes btn btn-success btn-sm" id="confirm">Submit</button>
+                                </form>
+                            </div>`;
+
+                    $('body').append( editPopupDisplay );
+                }
+
+
+            },
+            error: function() {
+                alert( 'Failed To Delete' );
+            }
+        });
+
 
     }
 
     $(document).on( 'click', '.editFontGroup', function(){
         let clickedId = $(this).attr('id');
-        let $key = clickedId.slice();
-        alert( clickedId );
+        let key = removeElement(clickedId).trim();
+        editPopup( key );
     });
 
 
 
     function showPopup(message) {
-        // Set the message text
         $('#popup-message').text(message);
-
-        // Show the popup and the overlay
         $('#delete-popup, #overlay').fadeIn();
         $('#overlay').addClass('active');
     }
 
-    // Function to hide the popup
     function hidePopup() {
 
-        $('#delete-popup, #overlay').empty();
-        $('#delete-popup, #overlay').remove();
+        $('#delete-popup, #edit-popup, #overlay').empty();
+        $('#delete-popup, #edit-popup, #overlay').remove();
 
     }
-
 
     $(document).on( 'click', '#close-popup, #confirm-no', function(){
         hidePopup();
@@ -327,7 +398,6 @@ $(document).ready(async function () {
 
     const remove_items = ( key )=> {
 
-        // console.log( key );
         $.ajax({
             url: 'API/delete_group.php',
             type: 'POST',
@@ -363,7 +433,7 @@ $(document).ready(async function () {
     }
     function make_popup( message, key ){
         let confirmationPopup = ` <div id="overlay" class="position-fixed w-100 h-100 bg-dark" style="display: block; top: 0; left: 0; opacity: 0.5; z-index: 1040;"></div>
-                                    <div id="delete-popup" class="position-fixed p-3 shadow rounded bg-light text-center" style="display: block; width: 350px; z-index: 1050;">
+                                  <div id="delete-popup" class="position-fixed p-3 shadow rounded bg-light text-center" style="display: block; width: 350px; z-index: 1050;">
                                         <button type="button" id="close-popup" class="close text-dark" aria-label="Close" style="padding-left: 5px;">
                                             <i class="fas fa-times"></i>
                                         </button>
