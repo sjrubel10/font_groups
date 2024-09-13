@@ -228,7 +228,7 @@ $(document).ready(async function () {
                             <td>' + item.name + '</td>\
                             <td>' + item.font_name + '</td>\
                             <td>' + item.counts + '</td>\
-                            <td><span class="editFontGroup" id="edit-'+item.key+'">Edit</span> <span class="deleteFontGroup" id="delete-'+item.key+'">Delete</span></td>\
+                            <td class="min-width-td"><span class="editFontGroup" id="edit-'+item.key+'">Edit</span> <span class="deleteFontGroup" id="delete-'+item.key+'">Delete</span></td>\
                         </tr>';
 
             $('#loadGroups').append(row);
@@ -240,7 +240,7 @@ $(document).ready(async function () {
                         <td>' + data.name + '</td>\
                         <td>' + data.font_name + '</td>\
                         <td>' + data.counts + '</td>\
-                        <td><span class="editFontGroup" id="edit-'+data.key+'">Edit</span> <span class="deleteFontGroup" id="delete-'+data.key+'">Delete</span></td>\
+                        <td class="min-width-td"><span class="editFontGroup" id="edit-'+data.key+'">Edit</span> <span class="deleteFontGroup" id="delete-'+data.key+'">Delete</span></td>\
                     </tr>';
 
         $('#loadGroups').append( singleFontRow );

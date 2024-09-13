@@ -90,7 +90,7 @@ $created_groups =  make_font_group( $display_limit ) ;
                         <td><?php echo htmlspecialchars($group["name"]); ?></td>
                         <td><?php echo htmlspecialchars($group["font_name"]); ?></td>
                         <td><?php echo htmlspecialchars($group["counts"]); ?></td>
-                        <td><span class="editFontGroup" id="edit-<?php echo htmlspecialchars( $group["key"] )?>">Edit</span> <span class="deleteFontGroup" id="delete-<?php echo htmlspecialchars( $group["key"] )?>">Delete</span></td>
+                        <td class="min-width-td"><span class="editFontGroup" id="edit-<?php echo htmlspecialchars( $group["key"] )?>">Edit</span> <span class="deleteFontGroup" id="delete-<?php echo htmlspecialchars( $group["key"] )?>">Delete</span></td>
                     </tr>
                 <?php endforeach; ?>
             <?php } else {?>
