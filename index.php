@@ -1,17 +1,9 @@
 <?php
 require_once "init.php";
 
-$fontFolder = __DIR__ . '/uploaded_font/';
-$font_files = get_uploaded_file_names( $fontFolder );
-
 $display_limit = 100;
 $created_groups =  make_font_group( $display_limit ) ;
 
-//$group_data = get_groups_data( 1, '85f29283b25e' );
-//var_test( $group_data );
-//make_font_group();
-
-//var_test( $created_groups );
 
 ?>
 <!DOCTYPE html>
@@ -30,8 +22,9 @@ $created_groups =  make_font_group( $display_limit ) ;
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<h1 class="text-center">Create Font Group</h1>
+
 <div class="container p-2 mt-5 bg_info" >
+    <h1 class="text-center">Create Font Group</h1>
     <div class="container mt-5">
         <div class="file-upload-area" id="fileUploadArea">
             <input type="file" id="fileInput" class="d-none">
@@ -54,6 +47,7 @@ $created_groups =  make_font_group( $display_limit ) ;
                 <th>Action</th>
             </tr>
         </table>
+        <div class="emptyFontLoad" id="emptyFontLoad"></div>
     </div>
 
     <div class="container mt-5">
@@ -98,7 +92,7 @@ $created_groups =  make_font_group( $display_limit ) ;
                 <?php endforeach; ?>
             <?php } else {?>
                 <tr>
-                    <td>No Created Form Groups Found!</td>
+                    <td>No Created Font Groups Found!</td>
                 </tr>
             <?php }?>
             </tbody>

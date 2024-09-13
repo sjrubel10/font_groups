@@ -81,7 +81,8 @@ $(document).ready(async function () {
         options = '';
         loadedFonts = [];
         fontFiles.forEach(file => {
-            const fontName = file.split('.')[0]; // Extract the font name (without extension)
+        const fontName = file.split('.')[0]; // Extract the font name (without extension)
+
 
             loadedFonts.push( fontName );
             // Create a @font-face CSS rule for each font file
@@ -98,18 +99,18 @@ $(document).ready(async function () {
             const newDiv = `<div style="font-family: '${fontName}'; margin-bottom: 10px;">
                 ${fontName}
             </div>`;
-            const font_details = `<tr class="uploadedFonts">\
-                                            <td>${fontName}</td>\
-                                            <td style="font-family: '${fontName}'; margin-bottom: 10px;">${fontName}</td>\
-                                            <td id="${fontName}" class="removeLoadedFont">Delete</td>\
-                                        </tr>`
+            const font_details = `<tr class="uploadedFonts" id="uploadedFontsTr">\
+                                    <td>${fontName}</td>\
+                                    <td style="font-family: '${fontName}'; margin-bottom: 10px;">${fontName}</td>\
+                                    <td id="${fontName}" class="removeLoadedFont">Delete</td>\
+                                </tr>`;
 
             // Append the new div to the font container
             $('#fontHolder').after( font_details );
         });
 
         if( loadedFonts.length > 0 ){
-
+            $("#emptyFontLoad").empty();
             $('#fontRows').empty();
             loadedFonts.forEach(function(fontName) {
                 options += `<option value="${fontName}">${fontName}</option>`;
@@ -119,7 +120,8 @@ $(document).ready(async function () {
                 $('#fontRows').append( getStyle );
             }
         }else{
-            alert( 'You Do Not Have Any Uploaded Font Files, Please Upload Font Files For Creating Groups');
+            $("#emptyFontLoad").append( '<span>You Do Not Have Any Uploaded Font Files, Please Upload Font Files For Creating Groups</span>' );
+            // alert( 'You Do Not Have Any Uploaded Font Files, Please Upload Font Files For Creating Groups');
         }
 
 
