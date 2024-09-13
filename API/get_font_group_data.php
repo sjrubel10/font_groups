@@ -9,7 +9,9 @@
 require "../init.php";
 
 if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
+
     if( isset( $_POST['key'] )){
+
         $key = sanitize( $_POST['key'] );
 
         $display_limit = 1;
@@ -19,11 +21,10 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
         $font_files = get_uploaded_file_names( $fontFolder );
         if( count( $font_files ) > 0 ){
             foreach ( $font_files as $key => $file ){
-                $font_files[$key] = str_replace('.ttf', '', $file);
+                $font_files[$key] = str_replace('.ttf', '', $file );
             }
         }
 
-//        var_test( $font_files );
         if( $group_data ){
             $response = array(
                 'status' => true,

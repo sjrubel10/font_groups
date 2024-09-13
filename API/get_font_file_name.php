@@ -6,11 +6,7 @@
  * Time: 3:58 PM
  */
 
-
-//var_test( $_SERVER['REQUEST_METHOD'] );
-// Define the path to the folder containing font files
 $fontFolder = __DIR__ . '../../uploaded_font/';
-
 
 $fontFiles = [];
 

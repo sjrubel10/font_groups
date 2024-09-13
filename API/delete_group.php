@@ -10,6 +10,7 @@ require "../init.php";
 
 if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
     if( isset( $_POST['key'] )){
+
         $key = sanitize( $_POST['key'] );
 
         $result = updateGroupRecorded( $key, 0 );

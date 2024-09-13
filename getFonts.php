@@ -1,5 +1,4 @@
 <?php
-// Define the path to the folder containing font files
 $fontFolder = __DIR__ . '/uploaded_font/';
 
 $fontFiles = [];

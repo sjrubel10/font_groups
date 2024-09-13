@@ -11,18 +11,18 @@ require "../init.php";
 if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
     if( isset( $_POST )){
 
-//        var_test( $_POST );
         $is_font_updated = false;
         $is_name_change = false;
-        if (isset($_POST['titleName'])) {
+        if ( isset($_POST['titleName'] ) ) {
             $name = $_POST['titleName'];
-            unset($_POST['titleName']);
+            unset( $_POST['titleName'] );
         }else{
             $name = null;
         }
 
         $edited_data = [];
         if( $name !== null ){
+
             foreach ( $name as $key => $value ){
                 $is_name_change = updateGroupName( $key, $name[$key] );
                 $edited_data['name'] = $name[$key];
@@ -40,13 +40,10 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
             $edited_data['font_name'] = $fonts;
             $edited_data['counts'] = count( $font_deatils );
 
-//            var_test( $edited_data );
-
         }else{
             $font_details = [];
         }
 
-//        $result = 1;
         if( $is_font_updated ){
             $response = array(
                 'status' => true,

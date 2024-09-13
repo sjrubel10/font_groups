@@ -275,11 +275,18 @@ $(document).ready(async function () {
             data: $(this).serialize(),
             success: function(response) {
                 let result= JSON.parse(response);
-                // console.log( result.status );
                 if ( result.status === 'success') {
                     $('#validationMessage').html('<div class="alert alert-success">Group created successfully.</div>');
 
-                    // console.log( result.data );
+
+                    setTimeout( function() {
+                        // Clear all input fields after 3 seconds
+                        $('#fontGroupForm')[0].reset();
+                        $('#validationMessage').empty();
+                        // console.log('Fields cleared after 3 seconds.');
+                    }, 2000);
+
+
                     display_loaded_groups( result.data );
                 }else{
                     console.error('Error:', response.message);
