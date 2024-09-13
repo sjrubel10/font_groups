@@ -25,18 +25,19 @@ $created_groups =  make_font_group( $display_limit ) ;
 
 <div class="container p-2 mt-5 bg_info" >
     <h1 class="text-center">Create Font Group</h1>
-    <div class="container mt-5">
+    <div class="container mt-4 ">
         <div class="file-upload-area" id="fileUploadArea">
             <input type="file" id="fileInput" class="d-none">
             <i class="fas fa-upload mr-2"></i>
-            <p  class="text-center m-0">Click to upload Drag & drop </p>
+            <p  class="text-center m-0">Click to upload or Drag & drop </p>
             <p class="text-center"> Only TTF File Allowed </p>
         </div>
         <div id="uploadStatus" class="mt-3"></div>
     </div>
 
-    <div class="uploadedFilesHolder mt-5">
-        <h2>Uploaded font lists</h2>
+    <div class="container mt-4 border-bottom-custom">
+        <h3>Our Fonts</h3>
+        <p>Browse a list of Zepto fonts to build your font group.</p>
         <div id="font-container">
             <!-- Dynamic divs will be inserted here -->
         </div>
@@ -50,8 +51,9 @@ $created_groups =  make_font_group( $display_limit ) ;
         <div class="emptyFontLoad" id="emptyFontLoad"></div>
     </div>
 
-    <div class="container mt-5">
-        <h2>Create Font Group</h2>
+    <div class="container mt-4 border-bottom-custom">
+        <h3>Create Font Group</h3>
+        <p>You have to select at least two fonts</p>
         <form id="fontGroupForm">
             <div class="form-group mr-2">
                 <input type="text" class="form-control " name="titleName" required placeholder="Group title">
@@ -68,8 +70,9 @@ $created_groups =  make_font_group( $display_limit ) ;
     </div>
 
 
-    <div class="container mt-4">
-        <h2 class="mb-4">Group Data Display</h2>
+    <div class="container mt-4 border-bottom-custom">
+        <h3 class="mb-4">Our font groups</h3>
+        <p>List of all available font groups</p>
 
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
