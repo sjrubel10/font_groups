@@ -24,7 +24,7 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
         if( $name !== null ){
 
             foreach ( $name as $key => $value ){
-                $is_name_change = updateGroupName( $key, $name[$key] );
+                $is_name_change = update_group_name( $key, $name[$key] );
                 $edited_data['name'] = $name[$key];
                 $edited_data['key'] = $key;
             }

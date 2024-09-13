@@ -19,8 +19,8 @@ class database
     }
 
     // Method to close the database connection
-    public function closeConnection() {
-        if ($this->conn) {
+    public function close_connection() {
+        if ( $this->conn ) {
             $this->conn->close();
         }
     }

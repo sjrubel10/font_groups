@@ -386,7 +386,13 @@ $(document).ready(async function () {
                     $("#"+groupKey).remove();
                     display_single_font_group( result.data );
                     hidePopup();
-                    alert( result.message );
+
+                    make_popup( result.message, '' );
+                    $("#buttonHolder").empty();
+                    setTimeout( function(){
+                        hidePopup();
+                    }, 1000);
+                    // alert( result.message );
                 }
 
             },
@@ -413,13 +419,6 @@ $(document).ready(async function () {
         editPopup( key );
     });
 
-
-
-    function showPopup(message) {
-        $('#popup-message').text(message);
-        $('#delete-popup, #overlay').fadeIn();
-        $('#overlay').addClass('active');
-    }
 
     function hidePopup() {
 

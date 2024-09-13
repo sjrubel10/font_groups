@@ -73,7 +73,7 @@ function insert_font_data( $group_id, $data )
     }
 
     $stmt->close();
-    $db->closeConnection();
+    $db->close_connection();
 
     return $result;
 }
@@ -122,6 +122,7 @@ function get_groups_data( $display_limit, $group_key= null )
     }
 
     $st->close();
+    $db->close_connection();
     $font_details = get_multiple_fonts_data( $ids, $font_details );
 
     return $font_details;
@@ -151,6 +152,7 @@ function get_multiple_fonts_data( $ids, $font_details )
             );
         }
 
+        $db->close_connection();
         $st->close();
     }
 
@@ -204,6 +206,8 @@ function updateGroupRecorded( $key, $recorded )
         } else {
             error_log("Execute failed: " . $stmt->error);
         }
+
+        $db->close_connection();
         $stmt->close();
     } else {
         error_log("Prepare failed: " . $db->conn->error);
@@ -212,7 +216,7 @@ function updateGroupRecorded( $key, $recorded )
     return false;
 }
 
-function updateGroupName( $key, $name )
+function update_group_name( $key, $name )
 {
     $db =new database();
     $sql = "UPDATE `groups` SET `name` = ? WHERE `key` = ?";
@@ -225,6 +229,8 @@ function updateGroupName( $key, $name )
         } else {
             error_log("Execute failed: " . $stmt->error);
         }
+
+        $db->close_connection();
         $stmt->close();
     } else {
         error_log("Prepare failed: " . $db->conn->error);
