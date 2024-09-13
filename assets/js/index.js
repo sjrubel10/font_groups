@@ -19,10 +19,9 @@ $(document).ready(async function () {
         handleFiles(files);
     });
 
-    // Use mousedown or click event to ensure compatibility
     fileUploadArea.on('mousedown', function (event) {
-        if (event.which === 1) { // Ensure left mouse button click
-            fileInput.trigger('click'); // Trigger the file input click
+        if (event.which === 1) {
+            fileInput.trigger('click');
         }
     });
 
@@ -44,10 +43,9 @@ $(document).ready(async function () {
                 processData: false
             });
 
-            // Return the success response
             return {success: true, data: response};
         } catch (error) {
-            // Return an error response
+
             return {success: false, error: error.statusText || error.message};
         }
     };
@@ -95,10 +93,8 @@ $(document).ready(async function () {
                     font-style: normal;
                 }`;
 
-            // Append the CSS rule to the dynamic font styles
             $('#dynamic-font-styles').append(`<style>${fontFaceRule}</style>`);
 
-            // Create a new div with the loaded font
             const newDiv = `<div style="font-family: '${fontName}'; margin-bottom: 10px;">
                 ${fontName}
             </div>`;
@@ -129,7 +125,6 @@ $(document).ready(async function () {
 
     }
     const fetchFonts = async (url) => {
-        // $('#uploadedFonts').empty();
         $('#uploadedFontLists').find('.uploadedFonts').remove();
         try {
             // Wrap jQuery AJAX call in a Promise and await the response
@@ -147,11 +142,9 @@ $(document).ready(async function () {
     };
 
     const data = await fetchFonts('getFonts.php');
-    // const data = await fetchFonts('API/get_font_file_name.php');
     display_uploaded_fonts( data );
 
     $(document).on('click', '.removeLoadedFont', async function () {
-        // Your logic to handle the click event
         let clickedId = $(this).attr('id');
         let fileName = clickedId+'.ttf';
 
@@ -168,13 +161,7 @@ $(document).ready(async function () {
         }
     });
 
-    /*$(document).on('click', 'select[name="font[]"]', function() {
-        loadedFonts.forEach(function(fontName) {
-            // $("#")<option value="font1">Font 1</option>
-        });
-    });*/
 
-    //Create Form Group
     var rowCount = 1;
     // let options;
     function loadSelectFonts( options ){
@@ -280,11 +267,9 @@ $(document).ready(async function () {
 
 
                     setTimeout( function() {
-                        // Clear all input fields after 3 seconds
                         $('#fontGroupForm')[0].reset();
                         $('#validationMessage').empty();
-                        // console.log('Fields cleared after 3 seconds.');
-                    }, 2000);
+                    }, 1000);
 
 
                     display_loaded_groups( result.data );
