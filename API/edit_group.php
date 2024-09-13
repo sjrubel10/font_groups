@@ -11,11 +11,25 @@ require "../init.php";
 if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
     if( isset( $_POST )){
 
+        if( isset( $_POST['removeFonts'] ) ){
+            $remove_font_ids = $_POST['removeFonts'];
+        }else{
+            $remove_font_ids = [];
+        }
+        if( count( $remove_font_ids ) > 0 ){
+            foreach ( $remove_font_ids as $id ){
+                $is_remove = remove_fonts_from_group( (int)$id );
+            }
+        }
+//        var_test( $remove_font_ids );
+
+        parse_str($_POST['editFormData'], $editFormData);
+
         $is_font_updated = false;
         $is_name_change = false;
-        if ( isset($_POST['titleName'] ) ) {
-            $name = $_POST['titleName'];
-            unset( $_POST['titleName'] );
+        if ( isset($editFormData['titleName'] ) ) {
+            $name = $editFormData['titleName'];
+            unset( $editFormData['titleName'] );
         }else{
             $name = null;
         }
@@ -29,7 +43,7 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
                 $edited_data['key'] = $key;
             }
 
-            $font_deatils = $_POST;
+            $font_deatils = $editFormData;
             $fonts = '';
             foreach ( $font_deatils as $key => $font_detail ){
                 $is_font_updated = updateFont( $key, $font_detail['title'], $font_detail['font_name'], (int)$font_detail['size'], (int)$font_detail['price'] );

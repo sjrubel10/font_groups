@@ -273,6 +273,26 @@ function updateFont( $id, $title, $font_name, $size, $price )
     return $result;
 }
 
+function remove_fonts_from_group( $id )
+{
+    $id = sanitize( $id );
+    $db =new database();
+
+    $stmt = $db->conn->prepare("UPDATE `fonts` SET `recorded`= 0 WHERE `id` = ?" );
+    $stmt->bind_param("i", $id );
+
+    if ($stmt->execute()) {
+        $result = true;
+    } else {
+        $result = false;
+    }
+
+    $stmt->close();
+    $db->conn->close();
+
+    return $result;
+}
+
 function sanitize( $data )
 {
     $db = new Database();

@@ -66,6 +66,9 @@ $(document).ready(async function () {
         const result = await uploadFile(formData, url, action, '');
         if (result.success) {
             $('#uploadStatus').html(result.data);
+            setTimeout( function(){
+                $('#uploadStatus').empty();
+            }, 1000);
 
             const get_uploaded_fonts = await fetchFonts('getFonts.php');
             display_uploaded_fonts( get_uploaded_fonts );
@@ -341,7 +344,7 @@ $(document).ready(async function () {
                     });
 
                     let editPopupDisplay = ` <div id="overlay" class="position-fixed w-100 h-100 bg-dark" style="display: block; top: 0; left: 0; opacity: 0.5; z-index: 1040;"></div>
-                            <div id="edit-popup" class="position-fixed p-3 shadow rounded bg-light text-center" style="display: block; width: 650px; z-index: 1050;">
+                            <div id="edit-popup" class="position-fixed p-3 shadow rounded bg-light text-center" style="display: block; z-index: 1050;">
                                 <button type="button" id="close-popup" class="close text-dark" aria-label="Close" style="padding-left: 5px;">
                                     <i class="fas fa-times"></i>
                                 </button>
@@ -370,18 +373,39 @@ $(document).ready(async function () {
     }
 
 
+    removeFont = [];
+    $(document).on( 'click', '.removeEditRows', function(){
+        let childCount = $('#editFontRow').children('.fontDetailsHolder').length;
+        if( childCount > 2 ){
+
+            let removeCLickId = $(this).parent().attr('id');
+            let fontId = removeElement( removeCLickId );
+            removeFont.push( fontId );
+
+            $(this).parent().remove();
+        }else{
+            removeFont = [];
+            alert( 'You need At Least Two Fonts ' );
+        }
+
+    });
+
     $(document).on( 'submit', '#editFontGroupform', function( event ){
         let submitButtonId = $('#editFontGroupform input[type="submit"]').attr('id');
         let groupKey = removeElement( submitButtonId );
+
+        const data = {
+            removeFonts : removeFont,
+            editFormData : $(this).serialize(),
+        };
 
         event.preventDefault();
         $.ajax({
             url: 'API/edit_group.php',
             type: 'POST',
-            data: $(this).serialize(),
+            data: data,
             success: function(response) {
                 let result= JSON.parse(response);
-                // console.log( result.data );
                 if( result.status ){
                     $("#"+groupKey).remove();
                     display_single_font_group( result.data );
@@ -403,15 +427,6 @@ $(document).ready(async function () {
         });
     });
 
-    $(document).on( 'click', '.removeEditRows', function(){
-        let childCount = $('#editFontRow').children('.fontDetailsHolder').length;
-        if( childCount > 2 ){
-            $(this).parent().remove();
-        }else{
-            alert( 'You need At Least Two Fonts ' );
-        }
-
-    });
 
     $(document).on( 'click', '.editFontGroup', function(){
         let clickedId = $(this).attr('id');
@@ -424,6 +439,8 @@ $(document).ready(async function () {
 
         $('#delete-popup, #edit-popup, #overlay').empty();
         $('#delete-popup, #edit-popup, #overlay').remove();
+
+        removeFont = [];
 
     }
 
@@ -489,7 +506,6 @@ $(document).ready(async function () {
         make_popup( 'Are you sure you want to delete this item?', key );
 
     });
-
 
 
 });
