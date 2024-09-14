@@ -81,6 +81,9 @@ $(document).ready(async function () {
     var options;
     var loadedFonts;
     const display_uploaded_fonts = (fontFiles) => {
+
+        $('#uploadedFontLists').find('.uploadedFonts').remove();
+
         options = '';
         loadedFonts = [];
         fontFiles.forEach(file => {
@@ -129,8 +132,8 @@ $(document).ready(async function () {
 
 
     }
-    const fetchFonts = async (url) => {
-        $('#uploadedFontLists').find('.uploadedFonts').remove();
+    const fetchFonts = async ( url ) => {
+
         try {
             // Wrap jQuery AJAX call in a Promise and await the response
             const fontFiles = await $.ajax({
@@ -149,6 +152,10 @@ $(document).ready(async function () {
     const data = await fetchFonts('getFonts.php');
     display_uploaded_fonts( data );
 
+    const removeOptionByValue = (optionValue) => {
+        $('#fontRows option[value="' + optionValue + '"]').remove();
+    }
+
     $(document).on('click', '.removeLoadedFont', async function () {
         let clickedId = $(this).attr('id');
         let fileName = clickedId+'.ttf';
@@ -161,6 +168,8 @@ $(document).ready(async function () {
             });
             $(this).parent().hide();
             $(this).parent().remove();
+
+            removeOptionByValue( clickedId );
         } catch (error) {
             $('#uploadStatus').html('<div class="alert alert-danger">Failed to delete the file. Please try again.</div>');
         }
@@ -195,12 +204,15 @@ $(document).ready(async function () {
 
     }
 
-    $(document).on('click', '#addRowBtn', function () {
+    $(document).on('click', '#addRowBtn', async function () {
+
+        const uploadedFonts = await fetchFonts('getFonts.php');
 
         let options = '';
         rowCount++;
-        if( loadedFonts.length > 0 ){
-            loadedFonts.forEach(function(fontName) {
+        if( uploadedFonts.length > 0 ){
+            uploadedFonts.forEach(function(fontName) {
+                fontName = fontName.replace('.ttf', '');
                 options += `<option value="${fontName}">${fontName}</option>`;
             });
             let getStyle = loadSelectFonts( options );
